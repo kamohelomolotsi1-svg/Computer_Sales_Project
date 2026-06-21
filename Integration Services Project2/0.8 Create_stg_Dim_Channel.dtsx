@@ -1,0 +1,262 @@
+﻿<?xml version="1.0"?>
+<DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationDate="6/21/2026 6:33:26 PM"
+  DTS:CreationName="Microsoft.Package"
+  DTS:CreatorComputerName="DESKTOP-80TM65S"
+  DTS:CreatorName="DESKTOP-80TM65S\dell"
+  DTS:DTSID="{ED6ECD7B-D243-43E2-BDE7-F3BE0D622A0E}"
+  DTS:ExecutableType="Microsoft.Package"
+  DTS:LastModifiedProductVersion="17.0.1016.0"
+  DTS:LocaleID="1033"
+  DTS:ObjectName="Package1"
+  DTS:PackageType="5"
+  DTS:VersionBuild="6"
+  DTS:VersionGUID="{20B01926-31B8-48C7-8BBD-25DB0F2F89FF}">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:Variables />
+  <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\CreateRawTable"
+      DTS:CreationName="Microsoft.Pipeline"
+      DTS:Description="Data Flow Task"
+      DTS:DTSID="{C323E896-5F71-4A4C-8A3D-2D76CA446672}"
+      DTS:ExecutableType="Microsoft.Pipeline"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="CreateRawTable"
+      DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <pipeline
+          version="1" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Create_Clean_Dim_Channel"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Create_Clean_Dim_Channel"
+      DTS:DTSID="{7EED2843-B3D0-4B4B-8190-087708ABBEC7}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Create_Clean_Dim_Channel"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{BDE53827-EEB3-4BBB-8F4F-C598A8529D1D}"
+          SQLTask:SqlStatementSource="IF DB_ID('clean_computer_sales') IS NULL&#xA;BEGIN&#xA;    CREATE DATABASE clean_computer_sales;&#xA;END;&#xA;GO&#xA;&#xA;IF OBJECT_ID('[clean_computer_sales].[dbo].[dim_channel]', 'U') IS NULL&#xA;BEGIN&#xA;    CREATE TABLE [clean_computer_sales].[dbo].[dim_channel] (&#xA;        channel_id INT IDENTITY(1,1) PRIMARY KEY,&#xA;        channel NVARCHAR(100) NOT NULL&#xA;    );&#xA;END;&#xA;GO" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Create_stg_Dim_Channel"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Create_stg_Dim_Channel"
+      DTS:DTSID="{66AF10FE-394E-46E3-BF95-3B26B294D470}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Create_stg_Dim_Channel"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{BDE53827-EEB3-4BBB-8F4F-C598A8529D1D}"
+          SQLTask:SqlStatementSource="IF OBJECT_ID('[stg_computer_sales].[dbo].[dim_channel]', 'U') IS NULL&#xA;BEGIN&#xA;    CREATE TABLE [stg_computer_sales].[dbo].[dim_channel] (&#xA;        channel_id INT IDENTITY(1,1) PRIMARY KEY,&#xA;        channel NVARCHAR(100) NOT NULL&#xA;    );&#xA;END;&#xA;GO" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Load_Clean_Dim_Channel"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Load_Clean_Dim_Channel"
+      DTS:DTSID="{FBD1B224-B690-41C9-98FE-161B7B796A8B}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Load_Clean_Dim_Channel"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{BDE53827-EEB3-4BBB-8F4F-C598A8529D1D}"
+          SQLTask:SqlStatementSource="INSERT INTO [clean_computer_sales].[dbo].[dim_channel] (channel)&#xA;SELECT DISTINCT&#xA;    r.[Channel]&#xA;FROM [stg_computer_sales].[dbo].[raw_pc_data] AS r&#xA;WHERE r.[Channel] IS NOT NULL&#xA;  AND NOT EXISTS (&#xA;      SELECT 1&#xA;      FROM [clean_computer_sales].[dbo].[dim_channel] AS d&#xA;      WHERE d.channel = r.[Channel]&#xA;  );&#xA;GO" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Load_stg_Dim_Channel"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Load_stg_Dim_Channel"
+      DTS:DTSID="{A7BACEE8-62D9-43E0-92B5-6283CC5417E4}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Load_stg_Dim_Channel"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{BDE53827-EEB3-4BBB-8F4F-C598A8529D1D}"
+          SQLTask:SqlStatementSource="USE [stg_computer_sales];&#xA;GO&#xA;&#xA;INSERT INTO [stg_computer_sales].[dbo].[dim_channel] (channel)&#xA;SELECT DISTINCT&#xA;    r.[Channel]&#xA;FROM [stg_computer_sales].[dbo].[raw_pc_data] AS r&#xA;WHERE r.[Channel] IS NOT NULL&#xA;  AND NOT EXISTS (&#xA;      SELECT 1&#xA;      FROM [stg_computer_sales].[dbo].[dim_channel] AS d&#xA;      WHERE d.channel = r.[Channel]&#xA;  );&#xA;GO" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:PrecedenceConstraints>
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint]"
+      DTS:CreationName=""
+      DTS:DTSID="{CC641D47-AFBB-474E-971B-979B26FEB9F4}"
+      DTS:From="Package\CreateRawTable"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint"
+      DTS:To="Package\Create_stg_Dim_Channel" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 1]"
+      DTS:CreationName=""
+      DTS:DTSID="{9D973F65-23BB-4E35-BF41-A89296E385F0}"
+      DTS:From="Package\Create_stg_Dim_Channel"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 1"
+      DTS:To="Package\Load_stg_Dim_Channel" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 2]"
+      DTS:CreationName=""
+      DTS:DTSID="{F4A8BE03-09AF-4009-8D2F-1BA75D2A1CAE}"
+      DTS:From="Package\Load_stg_Dim_Channel"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 2"
+      DTS:To="Package\Create_Clean_Dim_Channel" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 3]"
+      DTS:CreationName=""
+      DTS:DTSID="{4C44BDA3-75A4-443E-8031-C8F53A2289A7}"
+      DTS:From="Package\Create_Clean_Dim_Channel"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 3"
+      DTS:To="Package\Load_Clean_Dim_Channel" />
+  </DTS:PrecedenceConstraints>
+  <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
+<!--This CDATA section contains the layout information of the package. The section includes information such as (x,y) coordinates, width, and height.-->
+<!--If you manually edit this section and make a mistake, you can delete it. -->
+<!--The package will still be able to load normally but the previous layout information will be lost and the designer will automatically re-arrange the elements on the design surface.-->
+<Objects
+  Version="8">
+  <!--Each node below will contain properties that do not affect runtime behavior.-->
+  <Package
+    design-time-name="Package">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="216,42.6666666666667"
+          Id="Package\Create_Clean_Dim_Channel"
+          TopLeft="83.7499962560838,264.105260258071" />
+        <NodeLayout
+          Size="202.666666666667,42.6666666666667"
+          Id="Package\Create_stg_Dim_Channel"
+          TopLeft="84.3749962281436,110.15789352733" />
+        <NodeLayout
+          Size="160,42.6666666666667"
+          Id="Package\CreateRawTable"
+          TopLeft="102.499995417893,39.684210090591" />
+        <NodeLayout
+          Size="208,42.6666666666667"
+          Id="Package\Load_Clean_Dim_Channel"
+          TopLeft="84.3749962281438,334.57894369481" />
+        <NodeLayout
+          Size="194.666666666667,42.6666666666667"
+          Id="Package\Load_stg_Dim_Channel"
+          TopLeft="88.7499960325655,177.894734888856" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint]"
+          TopLeft="184.104162489685,82.3508767572577">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,27.8070167700723"
+              Start="0,0"
+              End="0,20.3070167700723">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,20.3070167700723" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 1]"
+          TopLeft="185.895829463688,152.824560193997">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,25.0701746948594"
+              Start="0,0"
+              End="0,17.5701746948594">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,17.5701746948594" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 2]"
+          TopLeft="188.916662810991,220.561401555523">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,43.5438587025484"
+              Start="0,0"
+              End="0,36.0438587025484">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,36.0438587025484" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 3]"
+          TopLeft="190.062496242114,306.771926924738">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,27.8070167700724"
+              Start="0,0"
+              End="0,20.3070167700724">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,20.3070167700724" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </Package>
+</Objects>]]></DTS:DesignTimeProperties>
+</DTS:Executable>

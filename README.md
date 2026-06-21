@@ -21,24 +21,46 @@ Contains the script to create the raw staging table `raw_pc_data` in the staging
 
 ### 0.3 stg_dim_tables
 Contains scripts to create staging dimension tables such as:
-- `stg_dim_locations`
-- `stg_dim_shop`
-- `stg_dim_pc_product`
-- `stg_dim_sales_person`
-- `stg_dim_payment_id`
-- `stg_dim_priority_id`
-- `stg_dim_date`
-- `stg_dim_channel`
-- `stg_dim_customer_details`
+- `0.3.1 stg_dim_locations.sql`
+- `0.3.2 stg_dim_shop.sql`
+- `0.3.3 stg_dim_pc_product.sql`
+- `0.3.4 stg_dim_sales_person.sql`
+- `0.3.5 stg_dim_payment_id.sql`
+- `0.3.6 stg_dim_priority_id.sql`
+- `0.3.7 stg_dim_date.sql`
+- `0.3.8 stg_dim_channel.sql`
+- `0.3.9 stg_dim_customer_details.sql`
 
-Also includes the staging fact table script `stg_pc_sales_fact.sql`.
+Also includes the staging fact table script `0.4.0 stg_pc_sales_fact.sql`.
 
 ### 0.4 load_stg_tables
 Contains scripts to load data from the raw staging table into each staging dimension table.
 These scripts typically perform the first pass of data transformation and deduplication.
+The load scripts include:
+- `0.4.1 load_stg_dim_locations.sql`
+- `0.4.2 load_stg_dim_locations.sql` *(duplicate filename present in the folder)*
+- `0.4.2 load_stg_dim_shop.sql`
+- `0.4.3 load_stg_dim_pc_product.sql`
+- `0.4.4 load_stg_dim_sales_person.sql`
+- `0.4.5 load_stg_dim_payment_id.sql`
+- `0.4.6 load_stg_dim_priority_id.sql`
+- `0.4.7 load_stg_dim_dim_date.sql`
+- `0.4.8 load_stg_dim_dim_channel.sql`
+- `0.4.9 load_stg_dim_customer_details.sql`
 
 ### 0.5 clean_dim_tables
 Contains scripts to clean and load the final clean dimension tables in the `clean_computer_sales` database.
+The clean dimension scripts include:
+- `0.5.1 clean_dim_locations.sql`
+- `0.5.2 clean_dim_shop.sql`
+- `0.5.3 clean_dim_pc_product.sql`
+- `0.5.4 clean_dim_sales_person.sql`
+- `0.5.5 clean_dim_payment_id.sql`
+- `0.5.6 clean_dim_priority_id.sql`
+- `0.5.7 clean_dim_date.sql`
+- `0.5.8 clean_dim_channel.sql`
+- `0.5.9 clean_dim_customer_details.sql`
+
 For example, `0.5.1 clean_dim_locations.sql`:
 - creates `clean_computer_sales` if needed
 - creates `dim_locations` if missing
