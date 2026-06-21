@@ -100,3 +100,4 @@ These packages support the SSIS-driven creation and loading of the staging dimen
 - The SQL code uses `stg_computer_sales` for staging and `clean_computer_sales` for the cleaned dimension model.
 - SSIS project files are included for automation and package-based ETL orchestration.
 - Exclude IDE-specific build artifacts before committing or publishing.
+
