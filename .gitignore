@@ -1,0 +1,15 @@
+.vs/
+*.user
+*.suo
+*.cache
+*.dbmdl
+*.pdb
+*.log
+bin/
+obj/
+*.dtproj.user
+*.sqlproj.user
+*.conmgr
+.vscode/
+Thumbs.db
+Desktop.ini
