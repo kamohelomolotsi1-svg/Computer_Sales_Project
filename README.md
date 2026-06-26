@@ -42,6 +42,36 @@ flowchart LR
 | dim_customer_details | Dimension | Stores customer profile details |
 | pc_sales_fact | Fact | Stores sales transactions and measures |
 
+## ERD-style overview
+
+The warehouse model is organized around a central fact table connected to multiple dimensions:
+
+- pc_sales_fact is the transactional center of the model.
+- Each sales row is linked to a customer, location, product, channel, payment method, salesperson, date, shop, and priority.
+- This structure makes it suitable for reporting by product, region, sales person, payment type, and time.
+
+```mermaid
+erDiagram
+    dim_customer_details ||--o{ pc_sales_fact : contains
+    dim_locations ||--o{ pc_sales_fact : contains
+    dim_pc_product ||--o{ pc_sales_fact : contains
+    dim_channel ||--o{ pc_sales_fact : contains
+    dim_payment_id ||--o{ pc_sales_fact : contains
+    dim_sales_person ||--o{ pc_sales_fact : contains
+    dim_date ||--o{ pc_sales_fact : contains
+    dim_shop ||--o{ pc_sales_fact : contains
+    dim_priority_id ||--o{ pc_sales_fact : contains
+```
+
+## How this project works
+
+1. Raw computer sales data is loaded into the staging layer.
+2. The staging tables are created to preserve the source structure before transformation.
+3. Dimension tables are loaded with cleaned and standardized values.
+4. The fact table is populated using joins between the cleaned dimensions and the source data.
+5. Duplicate records are avoided by using logic such as NOT EXISTS during the load process.
+6. The final warehouse tables are ready for analytics, reporting, and dashboarding.
+
 ## Project structure
 
 ### 0.1 create_computer_stg_db
