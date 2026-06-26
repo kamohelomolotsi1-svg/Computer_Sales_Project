@@ -83,8 +83,7 @@ flowchart TD
     D --> F[0.5 clean_dim_fact_table]
     E --> G[0.6 dwh_dim_fact_table]
     F --> G
-    G --> H[Integration Services Project1]
-    G --> I[Integration Services Project2]
+    G --> H[Integration Services Project2]
 ```
 
 ### 0.1 create_computer_stg_db
@@ -107,18 +106,15 @@ Builds the final warehouse dimension and fact tables used for analytics.
 
 ## SSIS integration
 
-The repository also includes SSIS projects for automating the ETL workflow:
+The repository includes the SSIS project for automating the ETL workflow:
 
-- Integration Services Project1
 - Integration Services Project2
 
-These packages support creation of tables and loading of data in a repeatable way.
+This project provides packages for creation of tables and loading of data in a repeatable way.
 
-### SSIS package flow screenshot section
+### SSIS package flow
 
-If you want to add a visual screenshot of the SSIS package flow later, place the image in the repository and add a section like this:
-
-![SSIS package flow](ssis_package_flow.png)
+![SSIS package flow](computer_sales_ssis.PNG)
 
 ## How to run the project
 
