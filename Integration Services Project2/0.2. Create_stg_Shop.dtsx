@@ -11,8 +11,8 @@
   DTS:LocaleID="1033"
   DTS:ObjectName="Package1"
   DTS:PackageType="5"
-  DTS:VersionBuild="8"
-  DTS:VersionGUID="{4E926D5D-265D-4C37-8874-ED58B80D400B}">
+  DTS:VersionBuild="11"
+  DTS:VersionGUID="{F945DBC2-B554-4EA0-992E-3C9382ECD1FE}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:Variables />
@@ -50,6 +50,23 @@
       </DTS:ObjectData>
     </DTS:Executable>
     <DTS:Executable
+      DTS:refId="Package\Create_dwh_Dim_Shop"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Create_dwh_Dim_Shop"
+      DTS:DTSID="{91D19DD4-D262-4D53-89E7-17A551191C84}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Create_dwh_Dim_Shop"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{BDE53827-EEB3-4BBB-8F4F-C598A8529D1D}"
+          SQLTask:SqlStatementSource="IF DB_ID('dwh_computer_sales') IS NULL&#xA;BEGIN&#xA;    CREATE DATABASE dwh_computer_sales;&#xA;END;&#xA;GO&#xA;&#xA;IF OBJECT_ID('[dwh_computer_sales].[dbo].[dim_shop]', 'U') IS NULL&#xA;BEGIN&#xA;    CREATE TABLE [dwh_computer_sales].[dbo].[dim_shop] (&#xA;        shop_id INT IDENTITY(1,1) PRIMARY KEY,&#xA;        shop_name NVARCHAR(100) NOT NULL,&#xA;        shop_age NVARCHAR(50) NOT NULL&#xA;    );&#xA;END;&#xA;GO" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
       DTS:refId="Package\Create_stg_shop"
       DTS:CreationName="Microsoft.ExecuteSQLTask"
       DTS:Description="Create_stg_shop"
@@ -81,6 +98,23 @@
         <SQLTask:SqlTaskData
           SQLTask:Connection="{BDE53827-EEB3-4BBB-8F4F-C598A8529D1D}"
           SQLTask:SqlStatementSource="INSERT INTO [clean_computer_sales].[dbo].[dim_shop] (shop_name, shop_age)&#xA;SELECT DISTINCT&#xA;    r.[Shop_Name],&#xA;    r.[Shop_Age]&#xA;FROM [stg_computer_sales].[dbo].[raw_pc_data] AS r&#xA;WHERE r.[Shop_Name] IS NOT NULL&#xA;  AND r.[Shop_Age] IS NOT NULL&#xA;  AND NOT EXISTS (&#xA;      SELECT 1&#xA;      FROM [clean_computer_sales].[dbo].[dim_shop] AS d&#xA;      WHERE d.shop_name = r.[Shop_Name]&#xA;        AND d.shop_age = r.[Shop_Age]&#xA;  );" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Load_dwh_Dim_Shop"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Load_dwh_Dim_Shop"
+      DTS:DTSID="{FD3DF8D4-4BF2-4373-BDB7-6CD79C42CAD3}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Load_dwh_Dim_Shop"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{BDE53827-EEB3-4BBB-8F4F-C598A8529D1D}"
+          SQLTask:SqlStatementSource="INSERT INTO [dwh_computer_sales].[dbo].[dim_shop] (shop_name, shop_age)&#xA;SELECT DISTINCT&#xA;    r.[Shop_Name],&#xA;    r.[Shop_Age]&#xA;FROM [stg_computer_sales].[dbo].[raw_pc_data] AS r&#xA;WHERE r.[Shop_Name] IS NOT NULL&#xA;  AND r.[Shop_Age] IS NOT NULL&#xA;  AND NOT EXISTS (&#xA;      SELECT 1&#xA;      FROM [dwh_computer_sales].[dbo].[dim_shop] AS d&#xA;      WHERE d.shop_name = r.[Shop_Name]&#xA;        AND d.shop_age = r.[Shop_Age]&#xA;  );&#xA;GO" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
       </DTS:ObjectData>
     </DTS:Executable>
     <DTS:Executable
@@ -134,6 +168,22 @@
       DTS:LogicalAnd="True"
       DTS:ObjectName="Constraint 3"
       DTS:To="Package\Load_Clean_Dim_Shop" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 4]"
+      DTS:CreationName=""
+      DTS:DTSID="{93C0C38C-B639-4CC6-ACA0-A05A3382DFF0}"
+      DTS:From="Package\Load_Clean_Dim_Shop"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 4"
+      DTS:To="Package\Create_dwh_Dim_Shop" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 5]"
+      DTS:CreationName=""
+      DTS:DTSID="{F6909E14-2BFF-4FEC-A807-C4D07B572865}"
+      DTS:From="Package\Create_dwh_Dim_Shop"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 5"
+      DTS:To="Package\Load_dwh_Dim_Shop" />
   </DTS:PrecedenceConstraints>
   <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
 <!--This CDATA section contains the layout information of the package. The section includes information such as (x,y) coordinates, width, and height.-->
@@ -152,13 +202,21 @@
           Id="Package\0_2_ Create_stg_Shop"
           TopLeft="33.7499984912575,53.3684204666569" />
         <NodeLayout
+          Size="200.666666666667,42.6666666666667"
+          Id="Package\Create_Clean_Dim_Shop"
+          TopLeft="35.6249984074383,274.368418040121" />
+        <NodeLayout
           Size="161.333333333334,42.6666666666667"
           Id="Package\Create_stg_shop"
           TopLeft="53.1249976251272,123.157893384592" />
         <NodeLayout
+          Size="193.333333333334,42.6666666666667"
+          Id="Package\Load_Clean_Dim_Shop"
+          TopLeft="41.2499981559813,344.157890958056" />
+        <NodeLayout
           Size="154.666666666667,42.6666666666667"
           Id="Package\Load_stg_Shop"
-          TopLeft="54.3749975692475,212.10526082902" />
+          TopLeft="56.2499974854285,194.315787340134" />
         <EdgeLayout
           Id="Package.PrecedenceConstraints[Constraint]"
           TopLeft="131.104164724859,96.0350871333236">
@@ -183,18 +241,18 @@
         </EdgeLayout>
         <EdgeLayout
           Id="Package.PrecedenceConstraints[Constraint 1]"
-          TopLeft="132.749997597187,165.824560051259">
+          TopLeft="133.687497555278,165.824560051259">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="0,46.2807007777612"
+              EndConnector="0,28.4912272888757"
               Start="0,0"
-              End="0,38.7807007777612">
+              End="0,20.9912272888757">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,38.7807007777612" />
+                    End="0,20.9912272888757" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -203,24 +261,42 @@
             <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
-        <NodeLayout
-          Size="200.666666666667,42.6666666666667"
-          Id="Package\Create_Clean_Dim_Shop"
-          TopLeft="24.9999988824128,279.842102190547" />
         <EdgeLayout
           Id="Package.PrecedenceConstraints[Constraint 2]"
-          TopLeft="128.520831559163,254.771927495687">
+          TopLeft="134.770831279767,236.982454006801">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="0,25.0701746948599"
+              EndConnector="0,37.3859640333196"
               Start="0,0"
-              End="0,17.5701746948599">
+              End="0,29.8859640333196">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,17.5701746948599" />
+                    End="0,29.8859640333196" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 3]"
+          TopLeft="136.93749828171,317.035084706787">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,27.1228062512688"
+              Start="0,0"
+              End="0,19.6228062512688">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,19.6228062512688" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -231,34 +307,48 @@
         </EdgeLayout>
         <NodeLayout
           Size="193.333333333334,42.6666666666667"
-          Id="Package\Load_Clean_Dim_Shop"
-          TopLeft="48.1249978486449,362.631574965745" />
+          Id="Package\Create_dwh_Dim_Shop"
+          TopLeft="38.2812482886948,413.574558445463" />
         <EdgeLayout
-          Id="Package.PrecedenceConstraints[Constraint 3]"
-          TopLeft="125.333332215746,322.508768857214">
+          Id="Package.PrecedenceConstraints[Constraint 4]"
+          TopLeft="136.432289889005,386.824557624723">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="19.4583322995654,40.1228061085318"
+              EndConnector="0,26.7500008207405"
               Start="0,0"
-              End="19.4583322995654,32.6228061085318">
+              End="0,19.2500008207405">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,16.0614030542659" />
-                  <mssgle:CubicBezierSegment
-                    Point1="0,16.0614030542659"
-                    Point2="0,20.0614030542659"
-                    Point3="4,20.0614030542659" />
+                    End="0,19.2500008207405" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="184,42.6666666666667"
+          Id="Package\Load_dwh_Dim_Shop"
+          TopLeft="48.4374978346751,489.561400484992" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 5]"
+          TopLeft="137.692706395018,456.24122511213">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,33.3201753728621"
+              Start="0,0"
+              End="0,25.8201753728621">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
                   <mssgle:LineSegment
-                    End="15.4583322995654,20.0614030542659" />
-                  <mssgle:CubicBezierSegment
-                    Point1="15.4583322995654,20.0614030542659"
-                    Point2="19.4583322995654,20.0614030542659"
-                    Point3="19.4583322995654,24.0614030542659" />
-                  <mssgle:LineSegment
-                    End="19.4583322995654,32.6228061085318" />
+                    End="0,25.8201753728621" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>

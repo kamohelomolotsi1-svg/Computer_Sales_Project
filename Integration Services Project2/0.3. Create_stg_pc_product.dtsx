@@ -11,8 +11,8 @@
   DTS:LocaleID="1033"
   DTS:ObjectName="0 3  Create_stg_"
   DTS:PackageType="5"
-  DTS:VersionBuild="7"
-  DTS:VersionGUID="{78B34F88-AB3F-46C5-8250-A38706C354CD}">
+  DTS:VersionBuild="10"
+  DTS:VersionGUID="{BD8BA4A4-5889-4918-A8BC-2F8A96ADF1BE}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:Variables />
@@ -50,6 +50,23 @@
       </DTS:ObjectData>
     </DTS:Executable>
     <DTS:Executable
+      DTS:refId="Package\Create_dwh_Dim_PC_Product"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Create_dwh_Dim_PC_Product"
+      DTS:DTSID="{AFADAFA4-E722-426D-9408-E6413AF67377}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Create_dwh_Dim_PC_Product"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{BDE53827-EEB3-4BBB-8F4F-C598A8529D1D}"
+          SQLTask:SqlStatementSource="IF DB_ID('dwh_computer_sales') IS NULL&#xA;BEGIN&#xA;    CREATE DATABASE dwh_computer_sales;&#xA;END;&#xA;GO&#xA;&#xA;IF OBJECT_ID('[dwh_computer_sales].[dbo].[dim_pc_product]', 'U') IS NULL&#xA;BEGIN&#xA;    CREATE TABLE [dwh_computer_sales].[dbo].[dim_pc_product] (&#xA;        pc_product_id INT IDENTITY(1,1) PRIMARY KEY,&#xA;        pc_make NVARCHAR(100) NOT NULL,&#xA;        pc_model NVARCHAR(100) NOT NULL,&#xA;        storage_type NVARCHAR(100) NOT NULL,&#xA;        ram NVARCHAR(50) NOT NULL,&#xA;        storage_capacity NVARCHAR(100) NOT NULL&#xA;    );&#xA;END;&#xA;GO" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
       DTS:refId="Package\Create_stg_pc_product"
       DTS:CreationName="Microsoft.ExecuteSQLTask"
       DTS:Description="Create_stg_pc_product"
@@ -82,6 +99,23 @@
         <SQLTask:SqlTaskData
           SQLTask:Connection="{BDE53827-EEB3-4BBB-8F4F-C598A8529D1D}"
           SQLTask:SqlStatementSource="INSERT INTO [clean_computer_sales].[dbo].[dim_pc_product] (pc_make, pc_model, storage_type, ram, storage_capacity)&#xA;SELECT DISTINCT&#xA;    r.[PC_Make],&#xA;    r.[PC_Model],&#xA;    r.[Storage_Type],&#xA;    r.[RAM],&#xA;    r.[Storage_Capacity]&#xA;FROM [stg_computer_sales].[dbo].[raw_pc_data] AS r&#xA;WHERE r.[PC_Make] IS NOT NULL&#xA;  AND r.[PC_Model] IS NOT NULL&#xA;  AND r.[Storage_Type] IS NOT NULL&#xA;  AND r.[RAM] IS NOT NULL&#xA;  AND r.[Storage_Capacity] IS NOT NULL&#xA;  AND NOT EXISTS (&#xA;      SELECT 1&#xA;      FROM [clean_computer_sales].[dbo].[dim_pc_product] AS d&#xA;      WHERE d.pc_make = r.[PC_Make]&#xA;        AND d.pc_model = r.[PC_Model]&#xA;        AND d.storage_type = r.[Storage_Type]&#xA;        AND d.ram = r.[RAM]&#xA;        AND d.storage_capacity = r.[Storage_Capacity]&#xA;  );" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Load_dwh_Dim_PC_Product"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Load_dwh_Dim_PC_Product"
+      DTS:DTSID="{FB80165F-B635-4CDF-A654-4C7E3CE05466}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Load_dwh_Dim_PC_Product"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{BDE53827-EEB3-4BBB-8F4F-C598A8529D1D}"
+          SQLTask:SqlStatementSource="INSERT INTO [dwh_computer_sales].[dbo].[dim_pc_product] (pc_make, pc_model, storage_type, ram, storage_capacity)&#xA;SELECT DISTINCT&#xA;    r.[PC_Make],&#xA;    r.[PC_Model],&#xA;    r.[Storage_Type],&#xA;    r.[RAM],&#xA;    r.[Storage_Capacity]&#xA;FROM [stg_computer_sales].[dbo].[raw_pc_data] AS r&#xA;WHERE r.[PC_Make] IS NOT NULL&#xA;  AND r.[PC_Model] IS NOT NULL&#xA;  AND r.[Storage_Type] IS NOT NULL&#xA;  AND r.[RAM] IS NOT NULL&#xA;  AND r.[Storage_Capacity] IS NOT NULL&#xA;  AND NOT EXISTS (&#xA;      SELECT 1&#xA;      FROM [dwh_computer_sales].[dbo].[dim_pc_product] AS d&#xA;      WHERE d.pc_make = r.[PC_Make]&#xA;        AND d.pc_model = r.[PC_Model]&#xA;        AND d.storage_type = r.[Storage_Type]&#xA;        AND d.ram = r.[RAM]&#xA;        AND d.storage_capacity = r.[Storage_Capacity]&#xA;  );&#xA;GO" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
       </DTS:ObjectData>
     </DTS:Executable>
     <DTS:Executable
@@ -135,6 +169,22 @@
       DTS:LogicalAnd="True"
       DTS:ObjectName="Constraint 3"
       DTS:To="Package\Load_Clean_Dim_PC_Product" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 4]"
+      DTS:CreationName=""
+      DTS:DTSID="{F51FF6B5-C22E-425C-BF3B-0C0DB186A143}"
+      DTS:From="Package\Load_Clean_Dim_PC_Product"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 4"
+      DTS:To="Package\Create_dwh_Dim_PC_Product" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 5]"
+      DTS:CreationName=""
+      DTS:DTSID="{281FBABF-1A5F-4E20-BB52-EEE471B80AE4}"
+      DTS:From="Package\Create_dwh_Dim_PC_Product"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 5"
+      DTS:To="Package\Load_dwh_Dim_PC_Product" />
   </DTS:PrecedenceConstraints>
   <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
 <!--This CDATA section contains the layout information of the package. The section includes information such as (x,y) coordinates, width, and height.-->
@@ -149,20 +199,28 @@
       <GraphLayout
         Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
         <NodeLayout
+          Size="233.333333333334,42.6666666666667"
+          Id="Package\Create_Clean_Dim_PC_Product"
+          TopLeft="14.2857136470931,233.315786911923" />
+        <NodeLayout
           Size="190.666666666667,42.6666666666667"
           Id="Package\Create_stg_pc_product"
-          TopLeft="24.3749989103531,95.7894726324609" />
+          TopLeft="26.1607131162397,95.7894726324609" />
         <NodeLayout
           Size="144,42.6666666666667"
           Id="Package\CreateTables"
-          TopLeft="43.1249980721623,28.7368417897383" />
+          TopLeft="44.9107122780489,28.7368417897383" />
+        <NodeLayout
+          Size="225.333333333334,42.6666666666667"
+          Id="Package\Load_Clean_Dim_PC_Product"
+          TopLeft="19.2857134235756,300.368417754646" />
         <NodeLayout
           Size="186.666666666667,42.6666666666667"
           Id="Package\Load_stg_PC_Product"
-          TopLeft="32.4999985471369,163.526313993987" />
+          TopLeft="34.2857127530235,163.526313993987" />
         <EdgeLayout
           Id="Package.PrecedenceConstraints[Constraint]"
-          TopLeft="117.416665157924,71.403508456405">
+          TopLeft="119.202379363811,71.403508456405">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
@@ -184,7 +242,7 @@
         </EdgeLayout>
         <EdgeLayout
           Id="Package.PrecedenceConstraints[Constraint 1]"
-          TopLeft="122.770832062078,138.456139299128">
+          TopLeft="124.556546267965,138.456139299128">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
@@ -204,24 +262,42 @@
             <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
-        <NodeLayout
-          Size="233.333333333334,42.6666666666667"
-          Id="Package\Create_Clean_Dim_PC_Product"
-          TopLeft="12.4999994412065,233.315786911923" />
         <EdgeLayout
           Id="Package.PrecedenceConstraints[Constraint 2]"
-          TopLeft="127.499998994172,206.192980660653">
+          TopLeft="129.285713200058,206.192980660654">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="0,27.1228062512695"
+              EndConnector="0,27.1228062512693"
               Start="0,0"
-              End="0,19.6228062512695">
+              End="0,19.6228062512693">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,19.6228062512695" />
+                    End="0,19.6228062512693" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 3]"
+          TopLeft="131.452380202001,275.98245357859">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,24.3859641760563"
+              Start="0,0"
+              End="0,16.8859641760563">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,16.8859641760563" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -232,22 +308,48 @@
         </EdgeLayout>
         <NodeLayout
           Size="225.333333333334,42.6666666666667"
-          Id="Package\Load_Clean_Dim_PC_Product"
-          TopLeft="17.499999217689,300.368417754646" />
+          Id="Package\Create_dwh_Dim_PC_Product"
+          TopLeft="25.8928559853563,379.248116136682" />
         <EdgeLayout
-          Id="Package.PrecedenceConstraints[Constraint 3]"
-          TopLeft="129.666665996114,275.98245357859">
+          Id="Package.PrecedenceConstraints[Constraint 4]"
+          TopLeft="135.255951371133,343.035084421313">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="0,24.3859641760561"
+              EndConnector="0,36.2130317153698"
               Start="0,0"
-              End="0,16.8859641760561">
+              End="0,28.7130317153698">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,16.8859641760561" />
+                    End="0,28.7130317153698" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="217.333333333334,42.6666666666667"
+          Id="Package\Load_dwh_Dim_PC_Product"
+          TopLeft="33.0357128089028,456.466160401625" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 5]"
+          TopLeft="140.130951063796,421.914782803349">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,34.5513775982762"
+              Start="0,0"
+              End="0,27.0513775982762">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,27.0513775982762" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>

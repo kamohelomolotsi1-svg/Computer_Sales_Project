@@ -11,8 +11,8 @@
   DTS:LocaleID="1033"
   DTS:ObjectName="Package1"
   DTS:PackageType="5"
-  DTS:VersionBuild="16"
-  DTS:VersionGUID="{E9FF5204-CD80-44DF-BF11-AA1AE2437CAC}">
+  DTS:VersionBuild="18"
+  DTS:VersionGUID="{FD95CC1B-9E81-44B8-81FA-5E3D4F89C36B}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:Variables />
@@ -50,6 +50,23 @@
       </DTS:ObjectData>
     </DTS:Executable>
     <DTS:Executable
+      DTS:refId="Package\Create_dwh_Dim_Date"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Create_dwh_Dim_Date"
+      DTS:DTSID="{D01104A1-BF37-4BEC-9EE8-2E9129297920}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Create_dwh_Dim_Date"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{BDE53827-EEB3-4BBB-8F4F-C598A8529D1D}"
+          SQLTask:SqlStatementSource="IF DB_ID('dwh_computer_sales') IS NULL&#xA;BEGIN&#xA;    CREATE DATABASE dwh_computer_sales;&#xA;END;&#xA;GO&#xA;&#xA;IF OBJECT_ID('[dwh_computer_sales].[dbo].[dim_date]', 'U') IS NULL&#xA;BEGIN&#xA;    CREATE TABLE [dwh_computer_sales].[dbo].[dim_date]&#xA;    (&#xA;        date_id INT IDENTITY(1,1) PRIMARY KEY,&#xA;        full_date DATE NOT NULL,&#xA;        calendar_year INT NOT NULL,&#xA;        calendar_month INT NOT NULL,&#xA;        calendar_day INT NOT NULL,&#xA;        day_name NVARCHAR(50) NOT NULL&#xA;    );&#xA;END;&#xA;GO" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
       DTS:refId="Package\Create_stg_Dim_Date"
       DTS:CreationName="Microsoft.ExecuteSQLTask"
       DTS:Description="Create_stg_Dim_Date"
@@ -81,6 +98,23 @@
         <SQLTask:SqlTaskData
           SQLTask:Connection="{BDE53827-EEB3-4BBB-8F4F-C598A8529D1D}"
           SQLTask:SqlStatementSource="INSERT INTO [clean_computer_sales].[dbo].[dim_date]&#xA;(&#xA;full_date,&#xA;calendar_year,&#xA;calendar_month,&#xA;calendar_day,&#xA;day_name&#xA;)&#xA;&#xA;&#xA;&#xA;SELECT DISTINCT&#xA; dates.full_date,&#xA;YEAR(dates.full_date),&#xA;&#xA;MONTH(dates.full_date),&#xA;&#xA;DAY(dates.full_date),&#xA;&#xA;DATENAME(WEEKDAY, dates.full_date)&#xA;&#xA;&#xA;&#xA;FROM&#xA;&#xA;&#xA;(&#xA;SELECT TRY_CAST(Purchase_Date AS DATE) AS full_date&#xA;&#xA;FROM [stg_computer_sales].[dbo].[raw_pc_data]&#xA;&#xA;UNION&#xA;&#xA;SELECT TRY_CAST(Ship_Date AS DATE)&#xA;&#xA;FROM [stg_computer_sales].[dbo].[raw_pc_data]&#xA;&#xA;) dates&#xA;&#xA;WHERE dates.full_date IS NOT NULL&#xA;&#xA;AND NOT EXISTS&#xA;(&#xA;SELECT 1&#xA;FROM [clean_computer_sales].[dbo].[dim_date] d&#xA;WHERE d.full_date = dates.full_date&#xA;);&#xA;&#xA;&#xA;GO" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Load_dwh_Dim_Date"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Load_dwh_Dim_Date"
+      DTS:DTSID="{08B7C9CF-3610-4BCA-A0AE-2CA4FC714360}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Load_dwh_Dim_Date"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{BDE53827-EEB3-4BBB-8F4F-C598A8529D1D}"
+          SQLTask:SqlStatementSource="INSERT INTO [dwh_computer_sales].[dbo].[dim_date]&#xA;(&#xA;full_date,&#xA;calendar_year,&#xA;calendar_month,&#xA;calendar_day,&#xA;day_name&#xA;)&#xA;&#xA;SELECT DISTINCT&#xA;dates.full_date,&#xA;YEAR(dates.full_date),&#xA;MONTH(dates.full_date),&#xA;DAY(dates.full_date),&#xA;DATENAME(WEEKDAY, dates.full_date)&#xA;&#xA;FROM&#xA;(&#xA;SELECT TRY_CAST(Purchase_Date AS DATE) AS full_date&#xA;FROM [stg_computer_sales].[dbo].[raw_pc_data]&#xA;&#xA;UNION&#xA;&#xA;SELECT TRY_CAST(Ship_Date AS DATE)&#xA;FROM [stg_computer_sales].[dbo].[raw_pc_data]&#xA;&#xA;) dates&#xA;&#xA;WHERE dates.full_date IS NOT NULL&#xA;&#xA;AND NOT EXISTS&#xA;(&#xA;SELECT 1&#xA;FROM [dwh_computer_sales].[dbo].[dim_date] d&#xA;WHERE d.full_date = dates.full_date&#xA;);&#xA;GO" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
       </DTS:ObjectData>
     </DTS:Executable>
     <DTS:Executable
@@ -134,6 +168,22 @@
       DTS:LogicalAnd="True"
       DTS:ObjectName="Constraint 3"
       DTS:To="Package\Load_Clean_Dim_Date" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 4]"
+      DTS:CreationName=""
+      DTS:DTSID="{AC00710E-CA77-4D1E-8770-B6FA42AEB263}"
+      DTS:From="Package\Load_Clean_Dim_Date"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 4"
+      DTS:To="Package\Create_dwh_Dim_Date" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 5]"
+      DTS:CreationName=""
+      DTS:DTSID="{F69B1F7F-235B-4384-8A1C-C9A8ABB777EB}"
+      DTS:From="Package\Create_dwh_Dim_Date"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 5"
+      DTS:To="Package\Load_dwh_Dim_Date" />
   </DTS:PrecedenceConstraints>
   <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
 <!--This CDATA section contains the layout information of the package. The section includes information such as (x,y) coordinates, width, and height.-->
@@ -159,6 +209,10 @@
           Size="160,42.6666666666667"
           Id="Package\CreateRawTable"
           TopLeft="66.8749970104546,31.4736838649515" />
+        <NodeLayout
+          Size="190.666666666667,42.6666666666667"
+          Id="Package\Create_dwh_Dim_Date"
+          TopLeft="97.2916623173903,426.71929356032" />
         <NodeLayout
           Size="190.666666666667,42.6666666666667"
           Id="Package\Load_Clean_Dim_Date"
@@ -271,6 +325,54 @@
                     Point3="12.8333323275049,24.2324556839667" />
                   <mssgle:LineSegment
                     End="12.8333323275049,32.9649113679334" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 4]"
+          TopLeft="192.416662326704,393.324557553355">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,33.3947360069653"
+              Start="0,0"
+              End="0,25.8947360069653">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,25.8947360069653" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="182.666666666667,42.6666666666667"
+          Id="Package\Load_dwh_Dim_Date"
+          TopLeft="99.9999955296518,505.614032683721" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 5]"
+          TopLeft="191.979162256854,469.385960226987">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,36.2280724567339"
+              Start="0,0"
+              End="0,28.7280724567339">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,28.7280724567339" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>

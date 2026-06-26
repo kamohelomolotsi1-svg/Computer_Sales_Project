@@ -1,0 +1,365 @@
+﻿<?xml version="1.0"?>
+<DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationDate="6/25/2026 4:41:47 PM"
+  DTS:CreationName="Microsoft.Package"
+  DTS:CreatorComputerName="DESKTOP-80TM65S"
+  DTS:CreatorName="DESKTOP-80TM65S\dell"
+  DTS:DTSID="{1711D222-D5FF-442A-B29A-7166B45776CE}"
+  DTS:ExecutableType="Microsoft.Package"
+  DTS:LastModifiedProductVersion="17.0.1016.0"
+  DTS:LocaleID="1033"
+  DTS:ObjectName="Package1"
+  DTS:PackageType="5"
+  DTS:VersionBuild="9"
+  DTS:VersionGUID="{955E8C6B-70BB-44E3-B6EF-40389F700DE8}">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:Variables />
+  <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\CreateRawTable"
+      DTS:CreationName="Microsoft.Pipeline"
+      DTS:Description="Data Flow Task"
+      DTS:DTSID="{FD168D21-8037-4294-B981-24C0C9D78CA7}"
+      DTS:ExecutableType="Microsoft.Pipeline"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="CreateRawTable"
+      DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <pipeline
+          version="1" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Create_Clean_Fact_Sales"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Create_Clean_Fact_Sales"
+      DTS:DTSID="{BFAD7A7E-BFB4-4CF4-9D6A-45E532E87492}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Create_Clean_Fact_Sales"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{BDE53827-EEB3-4BBB-8F4F-C598A8529D1D}"
+          SQLTask:SqlStatementSource="IF DB_ID('clean_computer_sales') IS NULL&#xA;BEGIN&#xA;    CREATE DATABASE clean_computer_sales;&#xA;END;&#xA;GO&#xA;&#xA;IF OBJECT_ID('[clean_computer_sales].[dbo].[pc_sales_fact]', 'U') IS NULL&#xA;BEGIN&#xA;    CREATE TABLE [clean_computer_sales].[dbo].[pc_sales_fact] (&#xA;        pc_sales_fact_id INT IDENTITY(1,1) PRIMARY KEY,&#xA;        customer_id INT NOT NULL,&#xA;        location_id INT NOT NULL,&#xA;        pc_product_id INT NOT NULL,&#xA;        channel_id INT NOT NULL,&#xA;        payment_id INT NOT NULL,&#xA;        sales_person_id INT NOT NULL,&#xA;        date_id INT NOT NULL,&#xA;        shop_id INT NOT NULL,&#xA;        priority_id INT NOT NULL,&#xA;        cost_price DECIMAL(18,2) NULL,&#xA;        sale_price DECIMAL(18,2) NULL,&#xA;        discount_amount DECIMAL(18,2) NULL,&#xA;        finance_amount DECIMAL(18,2) NULL,&#xA;        credit_score INT NULL,&#xA;        total_sales_per_employee DECIMAL(18,2) NULL,&#xA;        pc_market_price DECIMAL(18,2) NULL,&#xA;        CONSTRAINT [FK_clean_pc_sales_fact_customer] FOREIGN KEY (customer_id)&#xA;            REFERENCES [clean_computer_sales].[dbo].[dim_customer_details] (customer_detail_id),&#xA;        CONSTRAINT [FK_clean_pc_sales_fact_location] FOREIGN KEY (location_id)&#xA;            REFERENCES [clean_computer_sales].[dbo].[dim_locations] (location_id),&#xA;        CONSTRAINT [FK_clean_pc_sales_fact_pc_product] FOREIGN KEY (pc_product_id)&#xA;            REFERENCES [clean_computer_sales].[dbo].[dim_pc_product] (pc_product_id),&#xA;        CONSTRAINT [FK_clean_pc_sales_fact_channel] FOREIGN KEY (channel_id)&#xA;            REFERENCES [clean_computer_sales].[dbo].[dim_channel] (channel_id),&#xA;        CONSTRAINT [FK_clean_pc_sales_fact_payment] FOREIGN KEY (payment_id)&#xA;            REFERENCES [clean_computer_sales].[dbo].[dim_payment_id] (payment_id),&#xA;        CONSTRAINT [FK_clean_pc_sales_fact_sales_person] FOREIGN KEY (sales_person_id)&#xA;            REFERENCES [clean_computer_sales].[dbo].[dim_sales_person] (sales_person_id),&#xA;        CONSTRAINT [FK_clean_pc_sales_fact_date] FOREIGN KEY (date_id)&#xA;            REFERENCES [clean_computer_sales].[dbo].[dim_date] (date_id),&#xA;        CONSTRAINT [FK_clean_pc_sales_fact_shop] FOREIGN KEY (shop_id)&#xA;            REFERENCES [clean_computer_sales].[dbo].[dim_shop] (shop_id),&#xA;   CONSTRAINT [FK_clean_pc_sales_fact_priority] FOREIGN KEY (priority_id)&#xA;    REFERENCES [clean_computer_sales].[dbo].[dim_priority_id] (priority_id)&#xA;    );&#xA;END;&#xA;GO"
+          SQLTask:TypeConversionMode="None" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Create_dwh_Fact_Sales"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Create_dwh_Fact_Sales"
+      DTS:DTSID="{70FEA8C7-8F94-4583-AD07-93804B13E7B8}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Create_dwh_Fact_Sales"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{BDE53827-EEB3-4BBB-8F4F-C598A8529D1D}"
+          SQLTask:SqlStatementSource="IF DB_ID('dwh_computer_sales') IS NULL&#xA;BEGIN&#xA;    CREATE DATABASE dwh_computer_sales;&#xA;END;&#xA;GO&#xA;&#xA;IF OBJECT_ID('[dwh_computer_sales].[dbo].[pc_sales_fact]', 'U') IS NULL&#xA;BEGIN&#xA;    CREATE TABLE [dwh_computer_sales].[dbo].[pc_sales_fact] (&#xA;        pc_sales_fact_id INT IDENTITY(1,1) PRIMARY KEY,&#xA;        customer_id INT NOT NULL,&#xA;        location_id INT NOT NULL,&#xA;        pc_product_id INT NOT NULL,&#xA;        channel_id INT NOT NULL,&#xA;        payment_id INT NOT NULL,&#xA;        sales_person_id INT NOT NULL,&#xA;        date_id INT NOT NULL,&#xA;        shop_id INT NOT NULL,&#xA;        priority_id INT NOT NULL,&#xA;        cost_price DECIMAL(18,2) NULL,&#xA;        sale_price DECIMAL(18,2) NULL,&#xA;        discount_amount DECIMAL(18,2) NULL,&#xA;        finance_amount DECIMAL(18,2) NULL,&#xA;        credit_score INT NULL,&#xA;        total_sales_per_employee DECIMAL(18,2) NULL,&#xA;        pc_market_price DECIMAL(18,2) NULL,&#xA;        CONSTRAINT [FK_dwh_pc_sales_fact_customer] FOREIGN KEY (customer_id)&#xA;            REFERENCES [dwh_computer_sales].[dbo].[dim_customer_details] (customer_detail_id),&#xA;        CONSTRAINT [FK_dwh_pc_sales_fact_location] FOREIGN KEY (location_id)&#xA;            REFERENCES [dwh_computer_sales].[dbo].[dim_locations] (location_id),&#xA;        CONSTRAINT [FK_dwh_pc_sales_fact_pc_product] FOREIGN KEY (pc_product_id)&#xA;            REFERENCES [dwh_computer_sales].[dbo].[dim_pc_product] (pc_product_id),&#xA;        CONSTRAINT [FK_dwh_pc_sales_fact_channel] FOREIGN KEY (channel_id)&#xA;            REFERENCES [dwh_computer_sales].[dbo].[dim_channel] (channel_id),&#xA;        CONSTRAINT [FK_dwh_pc_sales_fact_payment] FOREIGN KEY (payment_id)&#xA;            REFERENCES [dwh_computer_sales].[dbo].[dim_payment_id] (payment_id),&#xA;        CONSTRAINT [FK_dwh_pc_sales_fact_sales_person] FOREIGN KEY (sales_person_id)&#xA;            REFERENCES [dwh_computer_sales].[dbo].[dim_sales_person] (sales_person_id),&#xA;        CONSTRAINT [FK_dwh_pc_sales_fact_date] FOREIGN KEY (date_id)&#xA;            REFERENCES [dwh_computer_sales].[dbo].[dim_date] (date_id),&#xA;        CONSTRAINT [FK_dwh_pc_sales_fact_shop] FOREIGN KEY (shop_id)&#xA;            REFERENCES [dwh_computer_sales].[dbo].[dim_shop] (shop_id),&#xA;        CONSTRAINT [FK_dwh_pc_sales_fact_priority] FOREIGN KEY (priority_id)&#xA;            REFERENCES [dwh_computer_sales].[dbo].[dim_priority_id] (priority_id)&#xA;    );&#xA;END;&#xA;GO" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Create_stg_Fact_Sales"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Create_stg_Fact_Sales"
+      DTS:DTSID="{89ACDD45-F267-4CE6-971B-13A513BA52A5}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Create_stg_Fact_Sales"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{BDE53827-EEB3-4BBB-8F4F-C598A8529D1D}"
+          SQLTask:SqlStatementSource="IF OBJECT_ID('[stg_computer_sales].[dbo].[pc_sales_fact]', 'U') IS NULL&#xA;BEGIN&#xA;    CREATE TABLE [stg_computer_sales].[dbo].[pc_sales_fact] (&#xA;        pc_sales_fact_id INT IDENTITY(1,1) PRIMARY KEY,&#xA;        customer_id INT NOT NULL,&#xA;        location_id INT NOT NULL,&#xA;        pc_product_id INT NOT NULL,&#xA;        channel_id INT NOT NULL,&#xA;        payment_id INT NOT NULL,&#xA;        sales_person_id INT NOT NULL,&#xA;        date_id INT NOT NULL,&#xA;        shop_id INT NOT NULL,&#xA;        priority_id INT NOT NULL,&#xA;        cost_price DECIMAL(18,2) NULL,&#xA;        sale_price DECIMAL(18,2) NULL,&#xA;        discount_amount DECIMAL(18,2) NULL,&#xA;        finance_amount DECIMAL(18,2) NULL,&#xA;        credit_score INT NULL,&#xA;        total_sales_per_employee DECIMAL(18,2) NULL,&#xA;        pc_market_price DECIMAL(18,2) NULL,&#xA;        CONSTRAINT [FK_pc_sales_fact_customer] FOREIGN KEY (customer_id)&#xA;            REFERENCES [stg_computer_sales].[dbo].[dim_customer_details] (customer_id),&#xA;        CONSTRAINT [FK_pc_sales_fact_location] FOREIGN KEY (location_id)&#xA;            REFERENCES [stg_computer_sales].[dbo].[dim_locations] (location_id),&#xA;        CONSTRAINT [FK_pc_sales_fact_pc_product] FOREIGN KEY (pc_product_id)&#xA;            REFERENCES [stg_computer_sales].[dbo].[dim_pc_product] (pc_product_id),&#xA;        CONSTRAINT [FK_pc_sales_fact_channel] FOREIGN KEY (channel_id)&#xA;            REFERENCES [stg_computer_sales].[dbo].[dim_channel] (channel_id),&#xA;        CONSTRAINT [FK_pc_sales_fact_payment] FOREIGN KEY (payment_id)&#xA;            REFERENCES [stg_computer_sales].[dbo].[dim_payment_id] (payment_id),&#xA;        CONSTRAINT [FK_pc_sales_fact_sales_person] FOREIGN KEY (sales_person_id)&#xA;            REFERENCES [stg_computer_sales].[dbo].[dim_sales_person] (sales_person_id),&#xA;        CONSTRAINT [FK_pc_sales_fact_date] FOREIGN KEY (date_id)&#xA;            REFERENCES [stg_computer_sales].[dbo].[dim_date] (date_id),&#xA;        CONSTRAINT [FK_pc_sales_fact_shop] FOREIGN KEY (shop_id)&#xA;            REFERENCES [stg_computer_sales].[dbo].[dim_shop] (shop_id),&#xA;        CONSTRAINT [FK_pc_sales_fact_priority] FOREIGN KEY (priority_id)&#xA;            REFERENCES [stg_computer_sales].[dbo].[dim_priority] (priority_id)&#xA;    );&#xA;END;&#xA;GO" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Load_Clean_Fact_Sales"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Load_Clean_Fact_Sales"
+      DTS:DTSID="{EA30F229-944F-43D2-BB36-3F92BFB74DBC}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Load_Clean_Fact_Sales"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{BDE53827-EEB3-4BBB-8F4F-C598A8529D1D}"
+          SQLTask:SqlStatementSource="INSERT INTO [clean_computer_sales].[dbo].[pc_sales_fact] (&#xA;    customer_id,&#xA;    location_id,&#xA;    pc_product_id,&#xA;    channel_id,&#xA;    payment_id,&#xA;    sales_person_id,&#xA;    date_id,&#xA;    shop_id,&#xA;    priority_id,&#xA;    cost_price,&#xA;    sale_price,&#xA;    discount_amount,&#xA;    finance_amount,&#xA;    credit_score,&#xA;    total_sales_per_employee,&#xA;    pc_market_price&#xA;)&#xA;SELECT&#xA;    c.customer_detail_id,&#xA;    l.location_id,&#xA;    p.pc_product_id,&#xA;    ch.channel_id,&#xA;    pay.payment_id,&#xA;    s.sales_person_id,&#xA;    d.date_id,&#xA;    sh.shop_id,&#xA;    pr.priority_id,&#xA;    TRY_CAST(r.[Cost_Price] AS DECIMAL(18,2)),&#xA;    TRY_CAST(r.[Sale_Price] AS DECIMAL(18,2)),&#xA;    TRY_CAST(r.[Discount_Amount] AS DECIMAL(18,2)),&#xA;    TRY_CAST(r.[Finance_Amount] AS DECIMAL(18,2)),&#xA;    TRY_CAST(r.[Credit_Score] AS INT),&#xA;    TRY_CAST(r.[Total_Sales_per_Employee] AS DECIMAL(18,2)),&#xA;    TRY_CAST(r.[PC_Market_Price] AS DECIMAL(18,2))&#xA;FROM [stg_computer_sales].[dbo].[raw_pc_data] AS r&#xA;INNER JOIN [clean_computer_sales].[dbo].[dim_customer_details] AS c&#xA;    ON c.customer_name = r.[Customer_Name]&#xA;   AND c.customer_surname = r.[Customer_Surname]&#xA;   AND c.customer_contact_number = r.[Customer_Contact_Number]&#xA;   AND c.customer_email_address = r.[Customer_Email_Address]&#xA;INNER JOIN [clean_computer_sales].[dbo].[dim_locations] AS l&#xA;    ON l.continent = r.[Continent]&#xA;   AND l.country_or_state = r.[Country_or_State]&#xA;   AND l.province_or_city = r.[Province_or_City]&#xA;INNER JOIN [clean_computer_sales].[dbo].[dim_pc_product] AS p&#xA;    ON p.pc_make = r.[PC_Make]&#xA;   AND p.pc_model = r.[PC_Model]&#xA;   AND p.storage_type = r.[Storage_Type]&#xA;   AND p.ram = r.[RAM]&#xA;   AND p.storage_capacity = r.[Storage_Capacity]&#xA;INNER JOIN [clean_computer_sales].[dbo].[dim_channel] AS ch&#xA;    ON ch.channel = r.[Channel]&#xA;INNER JOIN [clean_computer_sales].[dbo].[dim_payment_id] AS pay&#xA;    ON pay.payment_method = r.[Payment_Method]&#xA;INNER JOIN [clean_computer_sales].[dbo].[dim_sales_person] AS s&#xA;    ON s.sales_person_name = r.[Sales_Person_Name]&#xA;   AND s.sales_person_department = r.[Sales_Person_Department]&#xA;INNER JOIN [clean_computer_sales].[dbo].[dim_date] AS d&#xA;    ON d.full_date = CAST(r.[Purchase_Date] AS DATE)&#xA;INNER JOIN [clean_computer_sales].[dbo].[dim_shop] AS sh&#xA;    ON sh.shop_name = r.[Shop_Name]&#xA;   AND sh.shop_age = r.[Shop_Age]&#xA;INNER JOIN [clean_computer_sales].[dbo].[dim_priority_id] AS pr&#xA;    ON pr.priority = r.[Priority]&#xA;WHERE NOT EXISTS (&#xA;    SELECT 1&#xA;    FROM [clean_computer_sales].[dbo].[pc_sales_fact] AS f&#xA;    WHERE f.customer_id = c.customer_detail_id&#xA;      AND f.location_id = l.location_id&#xA;      AND f.pc_product_id = p.pc_product_id&#xA;      AND f.channel_id = ch.channel_id&#xA;      AND f.payment_id = pay.payment_id&#xA;      AND f.sales_person_id = s.sales_person_id&#xA;      AND f.date_id = d.date_id&#xA;      AND f.shop_id = sh.shop_id&#xA;      AND f.priority_id = pr.priority_id&#xA;      AND f.cost_price = TRY_CAST(r.[Cost_Price] AS DECIMAL(18,2))&#xA;      AND f.sale_price = TRY_CAST(r.[Sale_Price] AS DECIMAL(18,2))&#xA;      AND f.discount_amount = TRY_CAST(r.[Discount_Amount] AS DECIMAL(18,2))&#xA;      AND f.finance_amount = TRY_CAST(r.[Finance_Amount] AS DECIMAL(18,2))&#xA;      AND f.credit_score = TRY_CAST(r.[Credit_Score] AS INT)&#xA;      AND f.total_sales_per_employee = TRY_CAST(r.[Total_Sales_per_Employee] AS DECIMAL(18,2))&#xA;      AND f.pc_market_price = TRY_CAST(r.[PC_Market_Price] AS DECIMAL(18,2))&#xA;);&#xA;GO" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Load_dwh_Fact_Sales"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Load_dwh_Fact_Sales"
+      DTS:DTSID="{3C36A650-D01A-4552-B3C6-DA560EC8C504}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Load_dwh_Fact_Sales"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{BDE53827-EEB3-4BBB-8F4F-C598A8529D1D}"
+          SQLTask:SqlStatementSource="INSERT INTO [dwh_computer_sales].[dbo].[pc_sales_fact] (&#xA;    customer_id,&#xA;    location_id,&#xA;    pc_product_id,&#xA;    channel_id,&#xA;    payment_id,&#xA;    sales_person_id,&#xA;    date_id,&#xA;    shop_id,&#xA;    priority_id,&#xA;    cost_price,&#xA;    sale_price,&#xA;    discount_amount,&#xA;    finance_amount,&#xA;    credit_score,&#xA;    total_sales_per_employee,&#xA;    pc_market_price&#xA;)&#xA;SELECT&#xA;    c.customer_detail_id,&#xA;    l.location_id,&#xA;    p.pc_product_id,&#xA;    ch.channel_id,&#xA;    pay.payment_id,&#xA;    s.sales_person_id,&#xA;    d.date_id,&#xA;    sh.shop_id,&#xA;    pr.priority_id,&#xA;    TRY_CAST(r.[Cost_Price] AS DECIMAL(18,2)),&#xA;    TRY_CAST(r.[Sale_Price] AS DECIMAL(18,2)),&#xA;    TRY_CAST(r.[Discount_Amount] AS DECIMAL(18,2)),&#xA;    TRY_CAST(r.[Finance_Amount] AS DECIMAL(18,2)),&#xA;    TRY_CAST(r.[Credit_Score] AS INT),&#xA;    TRY_CAST(r.[Total_Sales_per_Employee] AS DECIMAL(18,2)),&#xA;    TRY_CAST(r.[PC_Market_Price] AS DECIMAL(18,2))&#xA;FROM [stg_computer_sales].[dbo].[raw_pc_data] AS r&#xA;INNER JOIN [dwh_computer_sales].[dbo].[dim_customer_details] AS c&#xA;    ON c.customer_name = r.[Customer_Name]&#xA;   AND c.customer_surname = r.[Customer_Surname]&#xA;   AND c.customer_contact_number = r.[Customer_Contact_Number]&#xA;   AND c.customer_email_address = r.[Customer_Email_Address]&#xA;INNER JOIN [dwh_computer_sales].[dbo].[dim_locations] AS l&#xA;    ON l.continent = r.[Continent]&#xA;   AND l.country_or_state = r.[Country_or_State]&#xA;   AND l.province_or_city = r.[Province_or_City]&#xA;INNER JOIN [dwh_computer_sales].[dbo].[dim_pc_product] AS p&#xA;    ON p.pc_make = r.[PC_Make]&#xA;   AND p.pc_model = r.[PC_Model]&#xA;   AND p.storage_type = r.[Storage_Type]&#xA;   AND p.ram = r.[RAM]&#xA;   AND p.storage_capacity = r.[Storage_Capacity]&#xA;INNER JOIN [dwh_computer_sales].[dbo].[dim_channel] AS ch&#xA;    ON ch.channel = r.[Channel]&#xA;INNER JOIN [dwh_computer_sales].[dbo].[dim_payment_id] AS pay&#xA;    ON pay.payment_method = r.[Payment_Method]&#xA;INNER JOIN [dwh_computer_sales].[dbo].[dim_sales_person] AS s&#xA;    ON s.sales_person_name = r.[Sales_Person_Name]&#xA;   AND s.sales_person_department = r.[Sales_Person_Department]&#xA;INNER JOIN [dwh_computer_sales].[dbo].[dim_date] AS d&#xA;    ON d.full_date = CAST(r.[Purchase_Date] AS DATE)&#xA;INNER JOIN [dwh_computer_sales].[dbo].[dim_shop] AS sh&#xA;    ON sh.shop_name = r.[Shop_Name]&#xA;   AND sh.shop_age = r.[Shop_Age]&#xA;INNER JOIN [dwh_computer_sales].[dbo].[dim_priority_id] AS pr&#xA;    ON pr.priority = r.[Priority]&#xA;WHERE NOT EXISTS (&#xA;    SELECT 1&#xA;    FROM [dwh_computer_sales].[dbo].[pc_sales_fact] AS f&#xA;    WHERE f.customer_id = c.customer_detail_id&#xA;      AND f.location_id = l.location_id&#xA;      AND f.pc_product_id = p.pc_product_id&#xA;      AND f.channel_id = ch.channel_id&#xA;      AND f.payment_id = pay.payment_id&#xA;      AND f.sales_person_id = s.sales_person_id&#xA;      AND f.date_id = d.date_id&#xA;      AND f.shop_id = sh.shop_id&#xA;      AND f.priority_id = pr.priority_id&#xA;      AND f.cost_price = TRY_CAST(r.[Cost_Price] AS DECIMAL(18,2))&#xA;      AND f.sale_price = TRY_CAST(r.[Sale_Price] AS DECIMAL(18,2))&#xA;      AND f.discount_amount = TRY_CAST(r.[Discount_Amount] AS DECIMAL(18,2))&#xA;      AND f.finance_amount = TRY_CAST(r.[Finance_Amount] AS DECIMAL(18,2))&#xA;      AND f.credit_score = TRY_CAST(r.[Credit_Score] AS INT)&#xA;      AND f.total_sales_per_employee = TRY_CAST(r.[Total_Sales_per_Employee] AS DECIMAL(18,2))&#xA;      AND f.pc_market_price = TRY_CAST(r.[PC_Market_Price] AS DECIMAL(18,2))&#xA;);&#xA;GO" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Load_stg_Fact_Sales"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Load_stg_Fact_Sales"
+      DTS:DTSID="{4780AF60-3239-4D7F-B275-1CA4B232A226}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Load_stg_Fact_Sales"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{BDE53827-EEB3-4BBB-8F4F-C598A8529D1D}"
+          SQLTask:SqlStatementSource="USE [stg_computer_sales];&#xA;GO&#xA;&#xA;-- 0.4.10 Load pc_sales_fact into staging from raw_pc_data and staging dims&#xA;&#xA;INSERT INTO [stg_computer_sales].[dbo].[pc_sales_fact] (&#xA;    customer_id,&#xA;    location_id,&#xA;    pc_product_id,&#xA;    channel_id,&#xA;    payment_id,&#xA;    sales_person_id,&#xA;    date_id,&#xA;    shop_id,&#xA;    priority_id,&#xA;    cost_price,&#xA;    sale_price,&#xA;    discount_amount,&#xA;    finance_amount,&#xA;    credit_score,&#xA;    total_sales_per_employee,&#xA;    pc_market_price&#xA;)&#xA;SELECT&#xA;    c.customer_id,&#xA;    l.location_id,&#xA;    p.pc_product_id,&#xA;    ch.channel_id,&#xA;    pay.payment_id,&#xA;    s.sales_person_id,&#xA;    d.date_id,&#xA;    sh.shop_id,&#xA;    pr.priority_id,&#xA;    TRY_CAST(r.[Cost_Price] AS DECIMAL(18,2)),&#xA;    TRY_CAST(r.[Sale_Price] AS DECIMAL(18,2)),&#xA;    TRY_CAST(r.[Discount_Amount] AS DECIMAL(18,2)),&#xA;    TRY_CAST(r.[Finance_Amount] AS DECIMAL(18,2)),&#xA;    TRY_CAST(r.[Credit_Score] AS INT),&#xA;    TRY_CAST(r.[Total_Sales_per_Employee] AS DECIMAL(18,2)),&#xA;    TRY_CAST(r.[PC_Market_Price] AS DECIMAL(18,2))&#xA;FROM [dbo].[raw_pc_data] AS r&#xA;INNER JOIN [dbo].[dim_customer_details] AS c&#xA;    ON c.customer_name = r.[Customer_Name]&#xA;   AND c.customer_surname = r.[Customer_Surname]&#xA;   AND c.customer_contact_number = r.[Customer_Contact_Number]&#xA;   AND c.customer_email_address = r.[Customer_Email_Address]&#xA;INNER JOIN [dbo].[dim_locations] AS l&#xA;    ON l.continent = r.[Continent]&#xA;   AND l.country_or_state = r.[Country_or_State]&#xA;   AND l.province_or_city = r.[Province_or_City]&#xA;INNER JOIN [dbo].[dim_pc_product] AS p&#xA;    ON p.pc_make = r.[PC_Make]&#xA;   AND p.pc_model = r.[PC_Model]&#xA;   AND p.storage_type = r.[Storage_Type]&#xA;   AND p.ram = r.[RAM]&#xA;   AND p.storage_capacity = r.[Storage_Capacity]&#xA;INNER JOIN [dbo].[dim_channel] AS ch&#xA;    ON ch.channel = r.[Channel]&#xA;INNER JOIN [dbo].[dim_payment_id] AS pay&#xA;    ON pay.payment_method = r.[Payment_Method]&#xA;INNER JOIN [dbo].[dim_sales_person] AS s&#xA;    ON s.sales_person_name = r.[Sales_Person_Name]&#xA;   AND s.sales_person_department = r.[Sales_Person_Department]&#xA;INNER JOIN [dbo].[dim_date] AS d&#xA;    ON d.full_date = CAST(r.[Purchase_Date] AS DATE)&#xA;INNER JOIN [dbo].[dim_shop] AS sh&#xA;    ON sh.shop_name = r.[Shop_Name]&#xA;   AND sh.shop_age = r.[Shop_Age]&#xA;INNER JOIN [dbo].[dim_priority] AS pr&#xA;    ON pr.priority = r.[Priority]&#xA;WHERE NOT EXISTS (&#xA;    SELECT 1&#xA;    FROM [dbo].[pc_sales_fact] AS f&#xA;    WHERE f.customer_id = c.customer_id&#xA;      AND f.location_id = l.location_id&#xA;      AND f.pc_product_id = p.pc_product_id&#xA;      AND f.channel_id = ch.channel_id&#xA;      AND f.payment_id = pay.payment_id&#xA;      AND f.sales_person_id = s.sales_person_id&#xA;      AND f.date_id = d.date_id&#xA;      AND f.shop_id = sh.shop_id&#xA;      AND f.priority_id = pr.priority_id&#xA;      AND f.cost_price = TRY_CAST(r.[Cost_Price] AS DECIMAL(18,2))&#xA;      AND f.sale_price = TRY_CAST(r.[Sale_Price] AS DECIMAL(18,2))&#xA;      AND f.discount_amount = TRY_CAST(r.[Discount_Amount] AS DECIMAL(18,2))&#xA;      AND f.finance_amount = TRY_CAST(r.[Finance_Amount] AS DECIMAL(18,2))&#xA;      AND f.credit_score = TRY_CAST(r.[Credit_Score] AS INT)&#xA;      AND f.total_sales_per_employee = TRY_CAST(r.[Total_Sales_per_Employee] AS DECIMAL(18,2))&#xA;      AND f.pc_market_price = TRY_CAST(r.[PC_Market_Price] AS DECIMAL(18,2))&#xA;);&#xA;GO" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:PrecedenceConstraints>
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint]"
+      DTS:CreationName=""
+      DTS:DTSID="{B6DE3964-9805-4DB4-B8A3-6FE139A89EAA}"
+      DTS:From="Package\CreateRawTable"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint"
+      DTS:To="Package\Create_stg_Fact_Sales" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 1]"
+      DTS:CreationName=""
+      DTS:DTSID="{084C8CF1-8102-438C-9D45-0879E7A9627C}"
+      DTS:From="Package\Create_stg_Fact_Sales"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 1"
+      DTS:To="Package\Load_stg_Fact_Sales" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 2]"
+      DTS:CreationName=""
+      DTS:DTSID="{B480AD3B-874F-4C24-A3D4-B6AB90804381}"
+      DTS:From="Package\Load_stg_Fact_Sales"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 2"
+      DTS:To="Package\Create_Clean_Fact_Sales" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 3]"
+      DTS:CreationName=""
+      DTS:DTSID="{B5A5D349-D142-4EE3-80AB-F2F76C35C20A}"
+      DTS:From="Package\Create_Clean_Fact_Sales"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 3"
+      DTS:To="Package\Load_Clean_Fact_Sales" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 4]"
+      DTS:CreationName=""
+      DTS:DTSID="{7AECBF88-E5B3-4D38-AFAC-028C1BB2FD3D}"
+      DTS:From="Package\Load_Clean_Fact_Sales"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 4"
+      DTS:To="Package\Create_dwh_Fact_Sales" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 5]"
+      DTS:CreationName=""
+      DTS:DTSID="{1269CBE9-EC03-4F80-BC32-9F917829D555}"
+      DTS:From="Package\Create_dwh_Fact_Sales"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 5"
+      DTS:To="Package\Load_dwh_Fact_Sales" />
+  </DTS:PrecedenceConstraints>
+  <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
+<!--This CDATA section contains the layout information of the package. The section includes information such as (x,y) coordinates, width, and height.-->
+<!--If you manually edit this section and make a mistake, you can delete it. -->
+<!--The package will still be able to load normally but the previous layout information will be lost and the designer will automatically re-arrange the elements on the design surface.-->
+<Objects
+  Version="8">
+  <!--Each node below will contain properties that do not affect runtime behavior.-->
+  <Package
+    design-time-name="Package">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="205.333333333334,42.6666666666667"
+          Id="Package\Create_Clean_Fact_Sales"
+          TopLeft="32.1428557059595,253.157891957218" />
+        <NodeLayout
+          Size="196.666666666667,42.6666666666667"
+          Id="Package\Create_dwh_Fact_Sales"
+          TopLeft="41.964283838336,427.4686680732" />
+        <NodeLayout
+          Size="190.666666666667,42.6666666666667"
+          Id="Package\Create_stg_Fact_Sales"
+          TopLeft="31.2499986030162,102.631577820494" />
+        <NodeLayout
+          Size="160,42.6666666666667"
+          Id="Package\CreateRawTable"
+          TopLeft="43.7499980442228,21.8947366017054" />
+        <NodeLayout
+          Size="196.666666666667,42.6666666666667"
+          Id="Package\Load_Clean_Fact_Sales"
+          TopLeft="41.964283838336,341.829570296642" />
+        <NodeLayout
+          Size="188,42.6666666666667"
+          Id="Package\Load_dwh_Fact_Sales"
+          TopLeft="47.3214264559959,507.293229551834" />
+        <NodeLayout
+          Size="182.666666666667,42.6666666666667"
+          Id="Package\Load_stg_Fact_Sales"
+          TopLeft="38.74999826774,180.63157696407" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint]"
+          TopLeft="125.166664990286,64.5614032683721">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,38.0701745521219"
+              Start="0,0"
+              End="0,30.5701745521219">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,30.5701745521219" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 1]"
+          TopLeft="128.333331768711,145.298244487161">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,35.333332476909"
+              Start="0,0"
+              End="0,27.833332476909">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,27.833332476909" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 2]"
+          TopLeft="132.44642698685,223.298243630736">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,29.8596483264821"
+              Start="0,0"
+              End="0,22.3596483264821">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,22.3596483264821" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 3]"
+          TopLeft="137.553569772148,295.824558623885">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,46.0050116727573"
+              Start="0,0"
+              End="0,38.5050116727573">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,38.5050116727573" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 4]"
+          TopLeft="140.297617171669,384.496236963309">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,42.9724311098906"
+              Start="0,0"
+              End="0,35.4724311098906">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,35.4724311098906" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 5]"
+          TopLeft="140.809521813833,470.135334739866">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,37.1578948119671"
+              Start="0,0"
+              End="0,29.6578948119671">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,29.6578948119671" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </Package>
+</Objects>]]></DTS:DesignTimeProperties>
+</DTS:Executable>
