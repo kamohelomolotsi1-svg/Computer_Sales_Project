@@ -72,7 +72,20 @@ erDiagram
 5. Duplicate records are avoided by using logic such as NOT EXISTS during the load process.
 6. The final warehouse tables are ready for analytics, reporting, and dashboarding.
 
-## Project structure
+## Project structure diagram
+
+```mermaid
+flowchart TD
+    A[0.1 create_computer_stg_db] --> B[0.2 raw_stg_table]
+    B --> C[0.3 stg_dim_tables]
+    C --> D[0.4 load_stg_tables]
+    D --> E[0.5 clean_dim_tables]
+    D --> F[0.5 clean_dim_fact_table]
+    E --> G[0.6 dwh_dim_fact_table]
+    F --> G
+    G --> H[Integration Services Project1]
+    G --> I[Integration Services Project2]
+```
 
 ### 0.1 create_computer_stg_db
 Creates the staging database used to hold intermediate ETL data.
@@ -100,6 +113,12 @@ The repository also includes SSIS projects for automating the ETL workflow:
 - Integration Services Project2
 
 These packages support creation of tables and loading of data in a repeatable way.
+
+### SSIS package flow screenshot section
+
+If you want to add a visual screenshot of the SSIS package flow later, place the image in the repository and add a section like this:
+
+![SSIS package flow](ssis_package_flow.png)
 
 ## How to run the project
 
