@@ -104,6 +104,10 @@ Transforms and cleans the data into final dimension and fact table structures.
 ### 0.6 dwh_dim_fact_table
 Builds the final warehouse dimension and fact tables used for analytics.
 
+This folder contains stored procedures that orchestrate the loading of dimensions and the fact table from the staging layer into the final data warehouse schema.
+
+**See [STORED_PROCEDURES.md](STORED_PROCEDURES.md) for detailed documentation on all stored procedures.**
+
 ## SSIS integration
 
 The repository includes the SSIS project for automating the ETL workflow:
